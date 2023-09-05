@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Registrar Usuario{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="username">Nombre de Usuario</label>
+    <input name="username" id="username" class="form-control" required>
+    <label for="password">Contraseña</label>
+    <input type="password" name="password" id="password" class="form-control" required>
+    <label for="email">E-mail</label>
+    <input type="email" name="email" id="email" class="form-control" required>
+    <label for="type">Tipo de Usuario</label>
+    <select id="type" name="type" class="form-select" value="{{ request.form['type'] }}">
+      <option value="user">Usuario</option>
+      <option value="admin">Administrador</option>
+    </select>
+    <br>
+    <input class="btn btn-primary" type="submit" value="Registrar">
+  </form>
+{% endblock %}

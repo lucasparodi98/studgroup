@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Información de Red{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('inf_red.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for inf_red in inf_redes %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>{{ inf_red['documento'] }}</h1>
+          <div class="about">by {{ inf_red['username'] }} on {{ inf_red['fecha_creacion'].strftime('%d-%m-%Y') }}</div>
+        </div>
+        <a class="action" href="{{ url_for('inf_red.update', id=inf_red['id']) }}">Edit</a>
+      </header>
+      <p class="body">{{ inf_red['link_archivos'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

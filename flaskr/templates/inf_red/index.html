@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Información de Red{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('inf_red.create') }}">Nuevo</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  <br>
+  <table id="inf_red_table" class="table table-bordered table-sm table-hover">
+    <thead>
+      <tr class="table-primary" style="font-size: 0.90em;">
+        <th>Código Único</thr>
+        <th>Proyecto</th>
+        <th>Estado Inf. Red</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for inf_red in inf_redes %}
+        <tr>
+          <td style="white-space: nowrap;">{{ inf_red['id'] }}</td>
+          <td> <div class="largediv"> {{ inf_red['proyecto'] }} </div> </td>
+          <td>{{ inf_red['estado_inf_red'] }}</td>
+          <td>
+            <a class="action" href="{{ url_for('inf_red.update', id=inf_red['id']) }}" title="Editar"><i class="fa-solid fa-pen-to-square"></i></a>
+            <a class="action" href="{{ inf_red['link_archivos'] }}" title="Ver Archivos" target="_blank"><i class="fa-solid fa-file"></i></a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#inf_red_table').DataTable({
+        columns: [
+          {data: 'id', orderable: true, searchable: true},
+          {data: 'Proyecto', orderable: false, searchable: true},
+          {data: 'estado_inf_red', orderable: false, searchable: false},
+          {orderable: false, searchable: false}],
+        language: [
+          {info: "Mostrando _START_ a _END_ de _TOTAL_ entradas" },
+        ]
+      });
+    });
+  </script>
+{% endblock %}

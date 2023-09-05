@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Editar Inf. de Red: "{{ inf_red['id'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    <div class="row">
+      <div class="col">
+        <label for="link_archivos">Link de Archivos*</label>
+        <input id="link_archivos" name="link_archivos" class="form-control" type="url" placeholder="Link de Archivos" 
+          value="{{ request.form['link_archivos'] or inf_red['link_archivos'] }}" required></input>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="documento">Documento*</label>
+        <input id="documento" name="documento" class="form-control" value="{{ request.form['documento'] or inf_red['documento'] }}" placeholder="Documento" required>
+      </div>
+      <div class="col">
+        <label for="fecha_documento">Fecha del Documento</label>
+        <input id="fecha_documento" name="fecha_documento" type="date" class="form-control" value="{{ request.form['fecha_documento']  or inf_red['fecha_documento'] }}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="titulo_correo">Título del Correo</label>
+        <input id="titulo_correo" name="titulo_correo" class="form-control" value="{{ request.form['titulo_correo'] or inf_red['titulo_correo'] }}" placeholder="Título del Correo">
+      </div>
+      <div class="col">
+        <label for="fecha_correo">Fecha del Correo</label>
+        <input id="fecha_correo" name="fecha_correo" type="date" class="form-control" value="{{ request.form['fecha_correo'] or inf_red['fecha_correo'] }}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="nombre_entidad">Nombre de la Entidad*</label>
+        <input id="nombre_entidad" name="nombre_entidad" class="form-control" value="{{ request.form['nombre_entidad'] or inf_red['nombre_entidad'] }}" 
+          placeholder="Nombre de la Entidad" required>
+      </div>
+      <div class="col">
+        <label for="entidad">Grupo Entidad*</label>
+        <select id="entidad" name="entidad" class="form-select" value="{{ request.form['entidad'] }}" placeholder="Grupo Entidad" required>
+          <option>{{ inf_red['entidad'] }}</option>
+          <option>ATU</option>
+          <option>AUTORIDAD PARA LA RECONSTRUCCIÓN CON CAMBIOS</option>
+          <option>CONSORCIOS PRIVADOS</option>
+          <option>DESPLIEGUE TDP</option>
+          <option>EBC</option>
+          <option>EMAPE</option>
+          <option>INVERMET</option>
+          <option>GOBIERNOS REGIONALES</option>
+          <option>LUZ DEL SUR</option>
+          <option>MTC</option>
+          <option>MTC - PROVIAS</option>
+          <option>MUNICIPALIDADES</option>
+          <option>SEDACUSCO</option>
+          <option>SEDAPAL</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="proyecto">Proyecto*</label>
+        <textarea id="proyecto" name="proyecto" class="form-control" value="{{ request.form['proyecto'] }}" placeholder="Proyecto" required>{{ inf_red['proyecto'] }}</textarea>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="departamento">Departamento*</label>
+        <input id="departamento" name="departamento" class="form-control" value="{{ request.form['departamento'] or inf_red['departamento'] }}" placeholder="Departamento" required>
+      </div>
+      <div class="col">
+        <label for="provincia">Provincia*</label>
+        <input id="provincia" name="provincia" class="form-control" value="{{ request.form['provincia'] or inf_red['provincia'] }}" placeholder="Provincia" required>
+      </div>
+      <div class="col">
+        <label for="distrito">Distrito*</label>
+        <input id="distrito" name="distrito" class="form-control" value="{{ request.form['distrito'] or inf_red['distrito'] }}" placeholder="Distrito" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="contacto">Nombre del Contacto</label>
+        <input id="contacto" name="contacto" class="form-control" value="{{ request.form['contacto'] or inf_red['contacto'] }}" placeholder="Nombre del Contacto">
+      </div>
+      <div class="col">
+        <label for="correo_contacto">Correo del Contacto</label>
+        <input id="correo_contacto" name="correo_contacto" class="form-control" value="{{ request.form['correo_contacto'] or inf_red['correo_contacto'] }}" placeholder="Correo del Contacto">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="telefono_contacto">Telefono del Contacto</label>
+        <input id="telefono_contacto" name="telefono_contacto" class="form-control" value="{{ request.form['telefono_contacto'] or inf_red['telefono_contacto'] }}" placeholder="Telefono del Contacto">
+      </div>
+      <div class="col">
+        <label for="archivoKML">Cargar Archivo KML (zona del proyecto)</label>
+        <input id="archivoKML" name="archivoKML" type="file" class="custom-file-input" >
+      </div>
+    </div>
+
+    <hr class="hr" />
+
+    <div class="row">
+      <div class="col">
+        <label for="resumen_planta">Resumen Planta Red (SI/NO)</label>
+        <select id="resumen_planta" name="resumen_planta" class="form-select" value="{{ request.form['resumen_planta'] }}">
+          <option>{{ inf_red['resumen_planta'] }}</option>
+          <option>SI</option>
+          <option>NO</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="fecha_respuesta">Fecha de Respuesta</label>
+        <input id="fecha_respuesta" name="fecha_respuesta" type="date" class="form-control" value="{{ request.form['fecha_respuesta'] or inf_red['fecha_respuesta'] }}">
+      </div>
+      <div class="col">
+        <label for="tma">TMA</label>
+        <input id="tma" name="tma" type="number" class="form-control" value="{{ request.form['tma'] or inf_red['tma'] }}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="estado_inf_red">Estado de Información de Red</label>
+        <select id="estado_inf_red" name="estado_inf_red" class="form-select" value="{{ request.form['estado_inf_red'] }}">
+          <option>{{ inf_red['estado_inf_red'] }}</option>
+          <option>PENDIENTE</option>
+          <option>EN PROCESO</option>
+          <option>ATENDIDO</option>
+          <option>CANCELADO</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="estado_proyecto">Estado del Proyecto</label>
+        <select id="estado_proyecto" name="estado_proyecto" class="form-select" value="{{ request.form['estado_proyecto'] }}">
+          <option>{{ inf_red['estado_proyecto'] }}</option>
+          <option>EN PROYECTO</option>
+          <option>EN EJECUCION</option>
+          <option>ANTEPROYECTO</option>
+          <option>EN ESTUDIO</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="peso_kml">CAPACIDAD INFO RED kml</label>
+        <input id="peso_kml" name="peso_kml" class="form-control" value="{{ request.form['peso_kml'] or inf_red['peso_kml'] }}">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label for="formulario_completado">Formulario Remitido Completado</label>
+        <select id="formulario_completado" name="formulario_completado" class="form-select" value="{{ request.form['formulario_completado'] }}">
+          <option>{{ inf_red['formulario_completado'] }}</option>
+          <option>NO</option>
+          <option>REMITIDO</option>
+          <option>COMPLETADO</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="inicio_obras">Fecha de Inicio de Obras</label>
+        <input id="inicio_obras" name="inicio_obras" class="form-control" value="{{ request.form['inicio_obras'] or inf_red['inicio_obras'] }}" placeholder="Fecha de Inicio de Obras">
+      </div>
+      <div class="col">
+        <label for="complejidad">Complejidad</label>
+        <input id="complejidad" name="complejidad" class="form-control" value="{{ request.form['complejidad'] or inf_red['complejidad'] }}" placeholder="Complejidad">
+      </div>
+    </div>
+
+    <input class="btn btn-primary" type="submit" value="Guardar">
+  </form>
+  <hr>
+  
+  <form action="{{ url_for('inf_red.delete', id=inf_red['id']) }}" method="post">
+    <input class="btn btn-danger" type="submit" value="Eliminar" onclick="return confirm('Are you sure?');">
+  </form>
+{% endblock %}
+

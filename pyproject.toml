@@ -1,0 +1,11 @@
+[project]
+name = "obras_publicas_TDP"
+version = "1.0.0"
+description = "Pagina Web para la gestión de Proyectos de Obras Publicas"
+dependencies = [
+    "flask",
+]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"
