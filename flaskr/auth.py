@@ -20,44 +20,40 @@ def login_required(view):
     return wrapped_view
 
 @bp.route('/register', methods=('GET', 'POST'))
-@login_required
 def register():
-    if g.user['user_type'] == 'admin':
-        if request.method == 'POST':
-            username = request.form['username']
-            password = request.form['password']
-            email = request.form['email']
-            type = request.form['type']
-            db = get_db()
-            error = None
-            
-            if not username:
-                error = 'Username is required.'
-            elif not password:
-                error = 'Password is required.'
-            elif not email:
-                error = 'E-mail is required.'
-            
-            if error is None:
-                try:
-                    db.execute(
-                        "INSERT INTO user (username, password, email, user_type) VALUES (?, ?, ?, ?)",
-                        (username, generate_password_hash(password), email, type),
-                    )
-                    db.commit()
-                except db.IntegrityError:
-                    error = f"User {username} or E-mail {email} is already registered."
-                else:
-                    return redirect(url_for("auth.login"))
-            
-            flash(error)
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        db = get_db()
+        error = None
+        
+        if not username:
+            error = 'Username is required.'
+        elif not password:
+            error = 'Password is required.'
+        elif not email:
+            error = 'E-mail is required.'
+        
+        if error is None:
+            try:
+                db.execute(
+                    "INSERT INTO user (username, password, email) VALUES (?, ?, ?)",
+                    (username, generate_password_hash(password), email),
+                )
+                db.commit()
+            except db.IntegrityError:
+                error = f"User {username} or E-mail {email} is already registered."
+            else:
+                return redirect(url_for("auth.login"))
+        
+        flash(error)
 
-        return render_template('auth/register.html')
-    
-    return render_template('auth/only_admin.html')
+    return render_template('auth/register.html')
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']

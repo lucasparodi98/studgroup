@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="column">
+                <img src="/static/images/StudGroup_Icon2.png" alt="" class="logo">
+            </div>
+            <div class="column">
+                <div class="info">
+                    <div class="title">
+                        <h2>Bienvenido a StudGroup</h2>
+                    </div>
+                    <div class="text">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore 
+                            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut 
+                            aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
+                            dolore eu fugiat nulla pariatur.
+                        </p>
+                    </div>
+                    {% if not g.user %}
+                    <div class="buttons">
+                        <a href="{{ url_for('auth.login') }}"><button class="sign-btn">Iniciar Sesion</button></a>
+                        <a href="{{ url_for('auth.register') }}"><button class="sign-btn">Registrate</button></a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if g.user %}
+        <div class="center">
+            <p>ESTO SOLO SE PUEDE VER SI ESTÁS CON CUENTA INICIADA, ACA DEBAJO SE VERÍAN LOS BOTONES PARA CARGA DE DATOS.</p>
+            <a href="{{ url_for('inf_red.create') }}"><button class="sign-btn">Cargar Datos</button></a>
+        </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

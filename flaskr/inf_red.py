@@ -15,54 +15,9 @@ bp = Blueprint('inf_red', __name__)
 
 def allowed_file(filename):
     return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ['kml']
+        filename.rsplit('.', 1)[1].lower() in ['xlsx']
 
-def parse(root, points, linestring, polygon):
-    for elt in root.getchildren():
-        # strip the namespace
-        tag = re.sub(r'^.*\}', '', elt.tag)
 
-        if tag in ["Document", "Folder"]:
-            # recursively iterate over child elements
-            parse(elt, points, linestring, polygon)
-        elif tag == "Placemark":
-            if hasattr(elt, 'Point'):
-                points.append(elt.Point.coordinates)
-            elif hasattr(elt, 'LineString'):
-                linestring.append(elt.LineString.coordinates)
-            elif hasattr(elt, 'Polygon'):
-                polygon.append(elt.Polygon.outerBoundaryIs.LinearRing.coordinates)
-            elif hasattr(elt, 'MultiGeometry'):
-                print("MultiGeometry")
-                for gg in elt.MultiGeometry.getchildren():
-                    tag = re.sub(r'^.*\}', '', gg.tag)
-                    if tag == "Polygon":
-                        print(gg.outerBoundaryIs.LinearRing.coordinates)
-    return points, linestring, polygon
-
-#Función para obtener las coordenadas de una archivo kml
-def get_coordinates(file):
-    with open(file, 'r', encoding="utf8") as f:
-        root = parser.parse(f).getroot()
-        
-    points = []
-    linestring = []
-    polygon = []
-    points, linestring, polygon = parse(root, points, linestring, polygon)
-
-    aux = [ ['Points', points], ['LineStrings', linestring], ['Polygons', polygon]  ]
-    coordinates = [ ['Points', []], ['LineStrings', []], ['Polygons', []]  ]
-
-    for i in range(len(aux)):
-        for text in aux[i][1]:
-            temp = []
-            for coor in (str(text).strip()).split():
-                temp2 = [float(x) for x in coor.split(',')]
-                temp2 = temp2[0:2]
-                temp2.reverse()
-                temp.append(temp2)
-            coordinates[i][1].append(temp)
-    return json.dumps(coordinates)
 
 def get_inf(id, check_user=True):
     inf_red = get_db().execute(
@@ -76,81 +31,56 @@ def get_inf(id, check_user=True):
         abort(404, f"Post id {id} doesn't exist.")
 
     #Revisa que el usuario que edita solo sea el mismo que lo creo
-    #if check_user and inf_red['user_id'] != g.user['id']:
-    #    abort(403)
+    if check_user and inf_red['user_id'] != g.user['id']:
+        abort(403)
 
     return inf_red
 
 @bp.route('/')
-@login_required
 def index():
     db = get_db()
-    inf_redes = db.execute(
-        'SELECT i.id, proyecto, link_archivos, fecha_creacion, estado_inf_red'
-        ' FROM inf_red i JOIN user u ON i.user_id = u.id'
-        ' ORDER BY fecha_creacion DESC'
-    ).fetchall()
-    return render_template('inf_red/index.html', inf_redes=inf_redes)
+    #inf_redes = db.execute(
+    #    'SELECT i.id, proyecto, link_archivos, fecha_creacion, estado_inf_red'
+    #    ' FROM inf_red i JOIN user u ON i.user_id = u.id'
+    #    ' ORDER BY fecha_creacion DESC'
+    #).fetchall()
+    return render_template('index.html')
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
 def create():
-    today = datetime.today()
-    id = str(today.year) + '-' + str('%02d' % today.month) + str('%02d' % today.day) + str('%02d' % (today.hour + today.second))
     if request.method == 'POST':
-        document = request.form['documento']
-        link = request.form['link']
-        fecha_documento = request.form['fecha_documento']
-        titulo_correo = request.form['titulo_correo']
-        fecha_correo = request.form['fecha_correo']
-        nombre_entidad = request.form['nombre_entidad']
-        entidad = request.form['entidad']
-        proyecto = request.form['proyecto']
-        departamento = request.form['departamento']
-        provincia = request.form['provincia']
-        distrito = request.form['distrito']
-        contacto = request.form['contacto']
-        correo_contacto = request.form['correo_contacto']
-        telefono_contacto = request.form['telefono_contacto']
-        resumen_planta = request.form['resumen_planta']
-        fecha_respuesta = request.form['fecha_respuesta']
-        tma = request.form['tma']
-        estado_inf_red = request.form['estado_inf_red']
-        estado_proyecto = request.form['estado_proyecto']
-        peso_kml = request.form['peso_kml']
-        formulario_completado = request.form['formulario_completado']
-        inicio_obras = request.form['inicio_obras']
-        complejidad = request.form['complejidad']
-        archivoKML = request.files["archivoKML"]
+        name = request.form['name']
+        excel = request.files["excel"]
 
         error = None
 
         #Validación de Datos y Mostrar Error
-        if not document:
-            error = 'Es requerido el Nombre del Documento (Oficio, Carta, etc.)'
+        if not name:
+            error = 'Es requerido el Nombre para el Conjunto de Datos'
 
-        if archivoKML.filename != '' and not(allowed_file(archivoKML.filename)):
+        if excel.filename != '' and not(allowed_file(excel.filename)):
             error = 'Formato del archivo incorrecto'
 
         if error is not None:
             flash(error)
         #Registrar nueva entrada en la base de datos
         else:
-            filename = secure_filename(archivoKML.filename)
-            archivoKML.save(filename)
-            json_coords = get_coordinates(filename)
+            filename = secure_filename(excel.filename)
+            excel.save(filename)
+            json_data = "xd"
             os.remove(filename)
 
             db = get_db()
             db.execute(
-                'INSERT INTO inf_red (id, user_id, documento, link_archivos, fecha_documento, titulo_correo, fecha_correo, nombre_entidad, entidad, proyecto, departamento, provincia, distrito, contacto, correo_contacto, telefono_contacto, resumen_planta, fecha_respuesta, tma, estado_inf_red, estado_proyecto, peso_kml, formulario_completado, inicio_obras, complejidad, json_coords)'
-                ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                (id, g.user['id'], document, link, fecha_documento, titulo_correo, fecha_correo, nombre_entidad, entidad, proyecto, departamento, provincia, distrito, contacto, correo_contacto, telefono_contacto, resumen_planta, fecha_respuesta, tma, estado_inf_red, estado_proyecto, peso_kml, formulario_completado, inicio_obras, complejidad, json_coords)
+                'INSERT INTO inf_red (user_id, name, json_data)'
+                ' VALUES (?, ?, ?)',
+                (g.user['id'], name, json_data)
             )
             db.commit()
             return redirect(url_for('inf_red.index'))
 
-    return render_template('inf_red/create.html', id = id)
+    return render_template('inf_red/create.html')
 
 @bp.route('/<string:id>/update', methods=('GET', 'POST'))
 @login_required
