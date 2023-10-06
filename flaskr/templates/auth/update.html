@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Editar datos de: "{{ user['username'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <br>
+  <form method="post">
+    <div class="datos">
+      <div id="input1">
+        <label for="username" class="text-">Nombre*</label>
+        <input id="username" name="username" class="input-" placeholder="Nombre" 
+          value="{{ request.form['username'] or user['username'] }}" required></input>
+      </div>
+
+      <div id="input1">
+        <label for="lastname" class="text-">Apellido</label>
+        <input id="lastname" name="lastname" class="input-" placeholder="Apellido" 
+          value="{{ request.form['lastname'] or user['lastname'] }}" required></input>
+      </div>
+
+      <div id="input1">
+        <label for="email" class="text-">Correo Electrónico*</label>
+        <input id="email" name="email" type="email" class="input-" placeholder="Correo Electrónico" 
+          value="{{ request.form['email'] or user['email'] }}" required></input>
+      </div>
+
+      <div id="input1">
+      <label for="cargo" class="text-">Cargo</label>
+        <input id="cargo" name="cargo" class="input-" placeholder="Cargo" 
+          value="{{ request.form['cargo'] or user['cargo'] }}" required></input>
+      </div>
+      
+    </div>
+
+    <input class="sign-btn" type="submit" value="Guardar">
+  </form>
+  <hr>
+  
+  <form action="{{ url_for('inf_red.delete', id=inf['id']) }}" method="post">
+    <input class="danger-btn" type="submit" value="Eliminar Reporte" onclick="return confirm('¿Estás Seguro?');">
+  </form>
+{% endblock %}
+

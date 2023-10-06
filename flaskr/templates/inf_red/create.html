@@ -5,18 +5,45 @@
 {% endblock %}
 
 {% block content %}
+  <br>
+  <a href="/static/estructura.xlsx" download><button class="sign-btn">Descargar Ejemplo</button></a>
   <form method="post" enctype="multipart/form-data">
     <div class="row">
       <div class="col">
         <label for="name">Nombre del Conjunto de Datos*</label>
-        <input id="name" name="name" class="form-control" type="name" placeholder="Nombre" required>{{ request.form['name'] }}</input>
+        <input id="name" name="name" class="input-" type="name" placeholder="Nombre" required>{{ request.form['name'] }}</input>
       </div>
     </div>
     <div class="row">
-      <label for="excel">Cargar Excel</label>
-      <input id="excel" name="excel" type="file" class="custom-file-input" >
+      <div class="file-input">
+        <input type="file" id="excel" name="excel" class="file" required>
+        <label for="excel">
+          Cargar Excel
+          <p class="file-name"></p>
+        </label>
+      </div>
     </div>
-
+    <br>
     <input class="sign-btn" type="submit" value="Generar Grupos">
   </form>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    console.log('#excel')
+    const file = document.querySelector('excel');
+    console.log(file)
+    file.addEventListener('change', (e) => {
+      // Get the selected file
+      const [file] = e.target.files;
+      // Get the file name and size
+      const { name: fileName, size } = file;
+      // Convert size in bytes to kilo bytes
+      const fileSize = (size / 1000).toFixed(2);
+      
+      // Set the text content
+      const fileNameAndSize = `${fileName} - ${fileSize}KB`;
+      document.querySelector('.file-name').textContent = fileNameAndSize;
+    });
+  </script>
 {% endblock %}

@@ -31,9 +31,26 @@
         </div>
 
         {% if g.user %}
+        <br>
+        <hr>
         <div class="center">
-            <p>ESTO SOLO SE PUEDE VER SI ESTÁS CON CUENTA INICIADA, ACA DEBAJO SE VERÍAN LOS BOTONES PARA CARGA DE DATOS.</p>
             <a href="{{ url_for('inf_red.create') }}"><button class="sign-btn">Cargar Datos</button></a>
+            <br>
+            <br>
+            {% for inf_red in inf_redes %}
+                <article class="post">
+                <header>
+                    <div>
+                        <h1>{{ inf_red['name'] }}</h1>
+                        <div class="about">por {{ inf_red['username'] }} el {{ inf_red['fecha_creacion'].strftime('%d-%m-%Y') }}</div>
+                    </div>
+                    <a class="action" href="{{ url_for('inf_red.view', id=inf_red['id']) }}"><button class="view-btn">Ver</button></a>
+                </header>
+                </article>
+                {% if not loop.last %}
+                <hr>
+                {% endif %}
+            {% endfor %}
         </div>
         {% endif %}
 

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Reporte de: "{{ inf['name'] }}"{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <br>
+
+  <a href="/static/uploads/{{ inf['file_name'] }}" download><button class="sign-btn">Descargar Reporte</button></a>
+
+  <div>
+    {% for table in tables %}
+      {{titles[loop.index]}}
+      {{ table|safe }}
+    {% endfor %}
+  </div>
+  <hr>
+
+  <div id="chart1"></div>
+
+  <br>
+
+  <form action="{{ url_for('inf_red.delete', id=inf['id']) }}" method="post">
+    <input class="danger-btn" type="submit" value="Eliminar Usuario" onclick="return confirm('¿Estás Seguro?');">
+  </form>
+
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script>
+    var graph1 = {{ graphJSON | safe }};
+    Plotly.plot("chart1", graph1, {})
+  </script>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#inf_red_table').DataTable();
+    });
+  </script>
+{% endblock %}

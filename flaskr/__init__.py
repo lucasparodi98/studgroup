@@ -6,6 +6,7 @@ from . import db
 from . import auth
 from . import inf_red
 
+UPLOAD_FOLDER = 'D:/UPC Universidad/StudGroup Web/flaskr/static/uploads'
 
 def create_app(test_config=None):
     # create and configure the app
@@ -15,6 +16,8 @@ def create_app(test_config=None):
         SECRET_KEY = 'dev',
         DATABASE = os.path.join(app.instance_path, 'flaskr.sqlite'),
     )
+
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
