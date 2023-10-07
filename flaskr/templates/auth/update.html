@@ -38,8 +38,8 @@
   </form>
   <hr>
   
-  <form action="{{ url_for('inf_red.delete', id=inf['id']) }}" method="post">
-    <input class="danger-btn" type="submit" value="Eliminar Reporte" onclick="return confirm('¿Estás Seguro?');">
+  <form action="{{ url_for('auth.delete', id=user['id']) }}" method="post">
+    <input class="danger-btn" type="submit" value="Eliminar Cuenta" onclick="return confirm('¿Estás Seguro?');">
   </form>
 {% endblock %}
 

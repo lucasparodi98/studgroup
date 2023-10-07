@@ -67,7 +67,7 @@ def read_excel(file):
 
     file_name = str(uuid.uuid4()) + '.xlsx'
     df_result.to_excel(os.path.join(current_app.config['UPLOAD_FOLDER'], file_name), index=False)
-    return file_name
+    return file_name, 'Correcto'
 
 def get_inf(id, check_user=True):
     inf_red = get_db().execute(
