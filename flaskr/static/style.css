@@ -377,6 +377,7 @@ table {
   overflow-x: auto;
   table-layout: fixed;
   white-space:nowrap;
+  background: #151f42;
 }
 
 /* TABLE STYLE ENDS */
